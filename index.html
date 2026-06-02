@@ -1,1460 +1,256 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Jogo da Velocidade - Contas Contábeis</title>
 <style>
 :root{
-  --azul:#082f49; --azul2:#0f4c81; --claro:#e0f2fe; --verde:#dcfce7; --vermelho:#fee2e2; --amarelo:#fef9c3; --roxo:#f3e8ff; --texto:#0f172a;
+  --azul:#0f2f5f; --azul2:#123f7a; --claro:#eef6ff; --verde:#16a34a; --vermelho:#dc2626;
+  --amarelo:#facc15; --roxo:#7c3aed; --laranja:#f97316; --cinza:#f3f4f6; --texto:#0f172a;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#082f49,#0f172a);color:var(--texto);min-height:100vh;display:flex;justify-content:center;align-items:stretch}
-.app{width:100%;max-width:520px;min-height:100vh;background:#f8fafc;display:flex;flex-direction:column;box-shadow:0 0 25px #0008}
-header{background:var(--azul);color:white;text-align:center;padding:16px 12px;border-bottom:6px solid #38bdf8}
-header h1{font-size:21px;margin:0 0 6px;font-weight:900;letter-spacing:.3px}
-header p{margin:0;font-size:13px;opacity:.95}
-.screen{display:none;flex:1;padding:16px}
-.screen.active{display:block}
-.card{background:white;border-radius:22px;padding:18px;margin:10px 0;box-shadow:0 8px 22px #0f172a22;border:2px solid #dbeafe}
-.title{font-size:28px;font-weight:900;color:var(--azul);text-align:center;margin:10px 0}
-.sub{font-size:16px;text-align:center;line-height:1.45;color:#334155}
-.modes{display:grid;gap:10px;margin:18px 0}
-button{border:none;border-radius:16px;padding:14px 12px;font-weight:900;font-size:17px;cursor:pointer;box-shadow:0 5px 12px #0f172a22}
-.primary{background:#0369a1;color:white}
-.secondary{background:#e0f2fe;color:#075985;border:2px solid #bae6fd}
-.danger{background:#fee2e2;color:#991b1b}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
-.stat{border-radius:14px;background:#e0f2fe;padding:8px;text-align:center;font-weight:900;color:#075985}
-.stat span{display:block;font-size:22px;color:#0f172a}
-.progress{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin:10px 0}
-.bar{height:100%;width:0%;background:#22c55e;transition:.2s}
-.accountBox{min-height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;background:linear-gradient(180deg,#ffffff,#f0f9ff);border:3px solid #bae6fd;border-radius:24px;padding:18px}
-.emoji{font-size:48px;margin-bottom:8px}
-.account{font-size:31px;line-height:1.12;font-weight:900;color:#082f49}
-.hint{font-size:14px;color:#475569;margin-top:12px}
-.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.answers button{min-height:70px;color:white;font-size:17px}
-.ativo{background:#2563eb} .passivo{background:#dc2626} .pl{background:#16a34a} .resultado{background:#7c3aed}
-.feedback{margin-top:12px;border-radius:18px;padding:12px;text-align:center;font-weight:900;display:none;line-height:1.35}
-.feedback.ok{display:block;background:var(--verde);color:#166534;border:2px solid #86efac}
-.feedback.no{display:block;background:var(--vermelho);color:#991b1b;border:2px solid #fecaca}
-.detail{font-size:15px;font-weight:700;color:#334155;margin-top:5px}
-.nav{display:flex;gap:8px;margin-top:12px}
-.nav button{flex:1;font-size:15px;padding:11px}
-.finalScore{font-size:48px;font-weight:900;text-align:center;color:#082f49}
-.grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;margin-top:12px}
-.dot{height:24px;border-radius:8px;background:#cbd5e1;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900}
-.dot.ok{background:#86efac} .dot.no{background:#fca5a5}
-footer{background:#082f49;color:white;text-align:center;padding:10px;font-size:12px;font-weight:700}
-@media(max-width:380px){.account{font-size:26px}.answers button{font-size:15px;min-height:62px}header h1{font-size:18px}}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#071b3a,#123f7a);color:var(--texto);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:10px}.app{width:100%;max-width:520px;min-height:96vh;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.35);border:4px solid #dbeafe}.header{background:linear-gradient(135deg,var(--azul),#06142d);color:#fff;text-align:center;padding:18px 12px}.header h1{margin:0;font-size:23px;line-height:1.15}.header p{margin:6px 0 0;font-size:14px;opacity:.9}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:#dbeafe;padding:8px}.stat{background:#fff;border-radius:12px;text-align:center;padding:8px 4px;font-weight:800;font-size:13px}.stat small{display:block;font-weight:700;font-size:11px;color:#475569}.screen{padding:16px}.menu h2,.result h2{text-align:center;color:var(--azul);margin:8px 0 14px;font-size:25px}.intro{background:#f8fafc;border-left:6px solid var(--azul2);padding:12px;border-radius:14px;font-size:16px;line-height:1.45}.filters{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}.filter{border:0;border-radius:16px;padding:14px 8px;font-size:16px;font-weight:900;color:#fff;box-shadow:0 4px 8px rgba(0,0,0,.12)}.f-all{background:#111827}.f-ativo{background:#2563eb}.f-passivo{background:#dc2626}.f-pl{background:#16a34a}.f-receita{background:#7c3aed}.start{width:100%;border:0;border-radius:18px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;padding:18px;font-size:22px;font-weight:900;margin-top:8px}.config{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.select{padding:13px;border-radius:14px;border:2px solid #bfdbfe;font-weight:800;background:#eff6ff}.card{background:linear-gradient(180deg,#fff,#eff6ff);border:3px solid #bfdbfe;border-radius:24px;padding:18px;min-height:230px;display:flex;flex-direction:column;justify-content:center;text-align:center}.badge{display:inline-block;margin:0 auto 10px;background:#dbeafe;color:#123f7a;border-radius:999px;padding:6px 12px;font-weight:900}.account{font-size:33px;font-weight:900;color:#0f172a;line-height:1.12}.hint{margin-top:10px;font-size:15px;color:#475569;font-weight:700}.options{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.opt{border:0;border-radius:18px;color:#fff;padding:18px 8px;font-size:18px;font-weight:900;min-height:72px}.ativo{background:#2563eb}.passivo{background:#dc2626}.pl{background:#16a34a}.receita{background:#7c3aed}.progressbar{height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:12px 0}.fill{height:100%;width:0;background:linear-gradient(90deg,#22c55e,#2563eb)}.feedback{border-radius:24px;padding:18px;text-align:center;color:#fff;min-height:420px;display:flex;flex-direction:column;justify-content:center}.fb-ok{background:linear-gradient(135deg,#16a34a,#065f46)}.fb-err{background:linear-gradient(135deg,#dc2626,#7f1d1d)}.feedback h2{font-size:34px;margin:0 0 12px}.fb-account{font-size:29px;font-weight:900;line-height:1.15;margin-bottom:10px}.explain{background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.4);border-radius:18px;padding:13px;text-align:left;font-size:17px;line-height:1.45}.explain b{color:#fff}.countdown{font-size:21px;font-weight:900;margin:14px 0}.nextnow{border:0;border-radius:18px;background:#fff;color:#0f172a;padding:17px;font-size:21px;font-weight:900;width:100%;box-shadow:0 4px 12px rgba(0,0,0,.25)}.result{padding:18px;text-align:center}.scorebig{font-size:54px;font-weight:900;color:#0f2f5f}.rank{font-size:24px;font-weight:900;background:#eff6ff;border:3px solid #bfdbfe;border-radius:18px;padding:14px;margin:12px 0}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.action{border:0;border-radius:16px;padding:14px;font-size:17px;font-weight:900}.restart{background:#0f2f5f;color:#fff}.whats{background:#22c55e;color:#fff}.footer{position:sticky;bottom:0;background:#06142d;color:#fff;text-align:center;padding:9px;font-size:13px;font-weight:800}.hidden{display:none!important}@media(max-width:380px){.account{font-size:28px}.opt{font-size:16px}.header h1{font-size:20px}.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div class="app">
-<header>
-  <h1>⚡ JOGO DA VELOCIDADE</h1>
-  <p>Contas Contábeis • Professor Moreira</p>
-</header>
-
-<section id="home" class="screen active">
-  <div class="card">
-    <div class="title">Decore as Contas Contábeis</div>
-    <p class="sub">Aparece uma conta. O aluno deve tocar rapidamente no grupo correto.</p>
-    <div class="modes">
-      <button class="primary" onclick="startGame(60)">🥉 Desafio 60 segundos</button>
-      <button class="primary" onclick="startGame(90)">🥈 Desafio 90 segundos</button>
-      <button class="primary" onclick="startGame(120)">🥇 Desafio 120 segundos</button>
-      <button class="secondary" onclick="startGame(9999)">📚 Modo Treino sem pressa</button>
-    </div>
-    <p class="sub"><b>Total:</b> <span id="totalContas"></span> contas da lista enviada.</p>
-  </div>
-  <div class="card">
-    <b>🎯 Botões do jogo:</b><br><br>
-    🔵 Ativo &nbsp; 🔴 Passivo &nbsp; 🟢 PL &nbsp; 🟣 Resultado
-  </div>
-</section>
-
-<section id="game" class="screen">
+  <div class="header"><h1>🏁 JOGO DA VELOCIDADE<br>CONTAS CONTÁBEIS</h1><p>Curso de Contabilidade Professor Moreira</p></div>
   <div class="stats">
-    <div class="stat">⏱️ Tempo<span id="time">60</span></div>
-    <div class="stat">✅ Acertos<span id="right">0</span></div>
-    <div class="stat">❌ Erros<span id="wrong">0</span></div>
+    <div class="stat"><span id="stAcertos">0</span><small>Acertos</small></div>
+    <div class="stat"><span id="stErros">0</span><small>Erros</small></div>
+    <div class="stat"><span id="stAproveitamento">0%</span><small>Aproveit.</small></div>
+    <div class="stat"><span id="stTempo">00:00</span><small>Tempo</small></div>
   </div>
-  <div class="progress"><div id="bar" class="bar"></div></div>
-  <div class="accountBox">
-    <div class="emoji" id="emoji">💼</div>
-    <div class="account" id="account">Caixa</div>
-    <div class="hint">Qual é o grupo contábil?</div>
+  <div id="menu" class="screen menu">
+    <h2>📚 Treino das Contas</h2>
+    <div class="intro">O aluno verá uma conta contábil e deve tocar rapidamente no grupo correto. Depois da resposta, a explicação ficará na tela por <b>10 segundos</b>, mas ele pode clicar em <b>➡️ Próxima agora</b>.</div>
+    <div class="config">
+      <select id="qtd" class="select"><option value="20">20 contas</option><option value="50" selected>50 contas</option><option value="100">100 contas</option><option value="999">Todas</option></select>
+      <select id="tempoLimite" class="select"><option value="0">Sem limite</option><option value="60">60 segundos</option><option value="120" selected>120 segundos</option><option value="180">180 segundos</option></select>
+    </div>
+    <div class="filters">
+      <button class="filter f-all" onclick="setFiltro('Todos')">🌈 Misturado</button>
+      <button class="filter f-ativo" onclick="setFiltro('Ativo')">🔵 Ativo</button>
+      <button class="filter f-passivo" onclick="setFiltro('Passivo')">🔴 Passivo</button>
+      <button class="filter f-pl" onclick="setFiltro('Patrimônio Líquido')">🟢 PL</button>
+      <button class="filter f-receita" onclick="setFiltro('Receita/Dedução')">🟣 Receita/Dedução</button>
+    </div>
+    <button class="start" onclick="startGame()">🚀 COMEÇAR JOGO</button>
+    <p style="text-align:center;font-weight:800;color:#475569">Filtro atual: <span id="filtroAtual">Misturado</span></p>
   </div>
-  <div class="answers">
-    <button class="ativo" onclick="answer('ATIVO')">🔵 ATIVO</button>
-    <button class="passivo" onclick="answer('PASSIVO')">🔴 PASSIVO</button>
-    <button class="pl" onclick="answer('PL')">🟢 PL</button>
-    <button class="resultado" onclick="answer('RESULTADO')">🟣 RESULTADO</button>
-  </div>
-  <div id="feedback" class="feedback"></div>
-  <div class="nav">
-    <button class="secondary" onclick="skip()">Pular ➜</button>
-    <button class="danger" onclick="finishGame()">Encerrar</button>
-  </div>
-</section>
-
-<section id="end" class="screen">
-  <div class="card">
-    <div class="title">Resultado Final</div>
-    <div class="finalScore" id="percent">0%</div>
-    <p class="sub" id="summary"></p>
-    <div class="modes">
-      <button class="primary" onclick="startGame(lastDuration)">🔁 Jogar novamente</button>
-      <button class="secondary" onclick="show('home')">🏠 Voltar ao início</button>
+  <div id="game" class="screen hidden">
+    <div class="progressbar"><div id="fill" class="fill"></div></div>
+    <div class="card"><div id="contador" class="badge">Conta 1/50</div><div id="conta" class="account">Caixa</div><div id="subgrupo" class="hint">Toque no grupo correto</div></div>
+    <div class="options">
+      <button class="opt ativo" onclick="answer('Ativo')">🔵 Ativo</button>
+      <button class="opt passivo" onclick="answer('Passivo')">🔴 Passivo</button>
+      <button class="opt pl" onclick="answer('Patrimônio Líquido')">🟢 PL</button>
+      <button class="opt receita" onclick="answer('Receita/Dedução')">🟣 Receita/<br>Dedução</button>
     </div>
   </div>
-  <div class="card">
-    <b>Mapa de respostas:</b>
-    <div id="grid" class="grid"></div>
-  </div>
-</section>
-
-<footer>Curso de Contabilidade Professor Moreira • WhatsApp (61) 98532-3574</footer>
+  <div id="fb" class="screen hidden"><div id="fbBox" class="feedback"><h2 id="fbTitle"></h2><div id="fbConta" class="fb-account"></div><div id="fbTexto" class="explain"></div><div id="fbCountdown" class="countdown"></div><button class="nextnow" onclick="nextQuestion()">➡️ PRÓXIMA AGORA</button></div></div>
+  <div id="result" class="result hidden"><h2>🏆 Resultado Final</h2><div id="score" class="scorebig">0%</div><div id="rank" class="rank"></div><p id="resumo"></p><div class="actions"><button class="action restart" onclick="resetAll()">🔁 Reiniciar</button><button class="action whats" onclick="sendWhats()">📲 Enviar resultado</button></div></div>
+  <div class="footer">Curso de Contabilidade Professor Moreira • WhatsApp (61) 98532-3574</div>
 </div>
 <script>
-const ACCOUNTS = [
-  {
-    "conta": "Caixa",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Caixa e Equivalentes de Caixa",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Fundo Fixo",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Caixa e Equivalentes de Caixa",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Bancos Conta Movimento",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Caixa e Equivalentes de Caixa",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Aplicações de Liquidez Imediata",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Caixa e Equivalentes de Caixa",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Aplicações disponíveis para venda",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Aplicações Financeiras",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Aplicações mantidas até o vencimento",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Aplicações Financeiras",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Aplicações avaliadas ao valor justo por meio do resultado",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Aplicações Financeiras",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Aplicações avaliadas pelo custo",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Aplicações Financeiras",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perda estimada para redução ao valor recuperável",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Aplicações Financeiras",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Duplicatas a Receber",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Clientes",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perdas Estimadas com Créditos de Liquidação Duvidosa",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Clientes",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Juros a Apropriar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Clientes",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento de Salários",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos com Empregados",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento de Férias",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos com Empregados",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento de 13o Salário",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos com Empregados",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento a Empregados",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos com Empregados",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Empréstimos a Empregados",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos com Empregados",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento a Terceiros",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos com Terceiros",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "ICMS a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "IRRF a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "PIS a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "COFINS a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "IRPJ a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "CSLL a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "IPI a Recuperar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Créditos Fiscais e Tributários",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Mercadorias para Revenda",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Matéria-Prima",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Insumos",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Material de Embalagem",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Produtos em Elaboração",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Produtos Acabados",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Almoxarifado",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Estoque em Poder de Terceiros",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento a Fornecedores",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamento de Importação",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Ajuste a Valor Presente",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perdas Estimadas para Redução ao Valor Realizável Líquido",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Estoques",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Ativos Biológicos",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Ativos Biológicos",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Prêmios de Seguros",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Despesas Pagas Antecipadamente",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Aluguel Pago Antecipadamente",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Despesas Pagas Antecipadamente",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Assinaturas a Apropriar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Despesas Pagas Antecipadamente",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Anuidades a Apropriar",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Despesas Pagas Antecipadamente",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Ativo Não Circulante Mantido para Venda",
-    "grupo": "ATIVO CIRCULANTE",
-    "subgrupo": "Ativo Não Circulante Mantido para Venda",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Duplicatas a Receber LP",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Contas a Receber LP",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perdas Estimadas LP",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Contas a Receber LP",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Juros a Apropriar LP",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Contas a Receber LP",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "ICMS Diferido",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Créditos Tributários e Tributos Diferidos",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "IRPJ Diferido",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Créditos Tributários e Tributos Diferidos",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "CSLL Diferida",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Créditos Tributários e Tributos Diferidos",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Créditos com Empresas Coligadas",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Créditos com Partes Relacionadas",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Créditos com Empresas Controladas",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Créditos com Partes Relacionadas",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Dividendos Propostos a Receber",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Créditos com Partes Relacionadas",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Ativos Biológicos LP",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Ativos Biológicos LP",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Despesas Pagas Antecipadamente LP",
-    "grupo": "ANC - REALIZÁVEL A LONGO PRAZO",
-    "subgrupo": "Despesas Antecipadas LP",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Participações em Controladas",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Societárias",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Participações em Coligadas",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Societárias",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perdas Estimadas",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Societárias",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Mais-Valia",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Societárias",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Ágio",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Societárias",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Método do Custo",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Avaliadas",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Valor Justo",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Participações Avaliadas",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Imóveis para Aluguel",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Propriedades para Investimento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Arrendamento Operacional",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Propriedades para Investimento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Imóveis para Valorização",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Propriedades para Investimento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Imóveis para Definição Futura",
-    "grupo": "ANC - INVESTIMENTOS",
-    "subgrupo": "Propriedades para Investimento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Terrenos",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Edificações",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Instalações",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Computadores",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Máquinas",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Móveis",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Veículos",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Bens em Operação",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Obras em Andamento",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Imobilizado em Andamento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Instalações em Andamento",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Imobilizado em Andamento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Equipamentos em Andamento",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Imobilizado em Andamento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Adiantamentos a Fornecedores",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Imobilizado em Andamento",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Depreciação Acumulada",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Contas Redutoras do Imobilizado",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Exaustão Acumulada",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Contas Redutoras do Imobilizado",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perdas Estimadas para Redução ao Valor Recuperável",
-    "grupo": "ANC - IMOBILIZADO",
-    "subgrupo": "Contas Redutoras do Imobilizado",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Patentes",
-    "grupo": "ANC - INTANGÍVEL",
-    "subgrupo": "",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Direitos Autorais",
-    "grupo": "ANC - INTANGÍVEL",
-    "subgrupo": "",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Software",
-    "grupo": "ANC - INTANGÍVEL",
-    "subgrupo": "",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Intangível em Desenvolvimento",
-    "grupo": "ANC - INTANGÍVEL",
-    "subgrupo": "",
-    "natureza": "Devedora",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Amortização Acumulada",
-    "grupo": "ANC - INTANGÍVEL",
-    "subgrupo": "",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "(-) Perdas Estimadas para Redução ao Valor Recuperável",
-    "grupo": "ANC - INTANGÍVEL",
-    "subgrupo": "",
-    "natureza": "Credora (retificadora do ativo)",
-    "resposta": "ATIVO"
-  },
-  {
-    "conta": "Fornecedores Nacionais",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Fornecedores",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Fornecedores Estrangeiros",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Fornecedores",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Salários a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Rescisões a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Pró-Labore a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Pensão Alimentícia a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Férias a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "13o Salário a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "INSS a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "FGTS a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Contribuição Sindical",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Contribuição Assistencial",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Salários e Encargos Sociais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "ICMS a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "ICMS ST a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "COFINS a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "PIS a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "ISS a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "ISS Retido a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "IRRF a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "IPI a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "IRPJ a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "CSLL a Recolher",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Parcelamento de Tributos CP",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Obrigações Fiscais",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Empréstimos Bancários CP",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Financiamentos CP",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Duplicatas Descontadas",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Encargos Financeiros a Transcorrer",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Custos de Transação a Apropriar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Debêntures CP",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Debêntures",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Prêmio na Emissão de Debêntures",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Debêntures",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Encargos Financeiros a Transcorrer",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Debêntures",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Custos de Transação a Apropriar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Debêntures",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Água a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Contas a Pagar",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Luz a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Contas a Pagar",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Telefonia a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Contas a Pagar",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Internet a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Contas a Pagar",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Comissões a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Contas a Pagar",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Adiantamento de Clientes",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Outras Obrigações",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Juros sobre Capital Próprio a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Outras Obrigações",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Dividendos a Pagar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "Outras Obrigações",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Fiscais",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Previdenciárias",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Trabalhistas",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Cíveis",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Benefícios a Empregados",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Garantias",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Reestruturação",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Retirada de Ativos",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Programas de Fidelidade",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Contratos Onerosos",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Encargos a Apropriar",
-    "grupo": "PASSIVO CIRCULANTE",
-    "subgrupo": "⚖ Provisões",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Empréstimos Bancários LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Financiamentos LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Parcelamentos LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Encargos Financeiros a Transcorrer",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Custos de Transação a Apropriar",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Empréstimos e Financiamentos LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Debêntures LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Debêntures LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Prêmio na Emissão de Debêntures",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Debêntures LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Encargos Financeiros a Transcorrer",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Debêntures LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "(-) Custos de Transação a Apropriar",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Debêntures LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Trabalhistas LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Previdenciárias LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Fiscais LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões Cíveis LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Garantias LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Reestruturação LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Provisões para Retirada de Ativos LP",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "⚖ Provisões LP",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "IRPJ Diferido",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Tributos Diferidos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "CSLL Diferida",
-    "grupo": "PASSIVO NÃO CIRCULANTE",
-    "subgrupo": "Tributos Diferidos",
-    "natureza": "Credora",
-    "resposta": "PASSIVO"
-  },
-  {
-    "conta": "Capital Subscrito",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Capital Social",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "(-) Capital a Integralizar",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Capital Social",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Ágio na Emissão de Ações",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Capital",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva Especial para Ágio na Incorporação",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Capital",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "(-) Gastos na Emissão de Títulos Patrimoniais",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Capital",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva Legal",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva Estatutária",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva para Contingências",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva de Lucros a Realizar",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva para Expansão",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva de Incentivos Fiscais",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Reserva Especial para Dividendo Obrigatório Não Distribuído",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Reservas de Lucro",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Lucros Acumulados",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Lucros ou Prejuízos Acumulados",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Prejuízos Acumulados",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Lucros ou Prejuízos Acumulados",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Ajustes de Exercícios Anteriores",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Lucros ou Prejuízos Acumulados",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Dividendo Adicional Proposto",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Dividendos",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "(-) Ações de Emissão Própria em Tesouraria",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Ações em Tesouraria",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Ajustes de Avaliação Patrimonial",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Outros Resultados Abrangentes",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "(-) Tributos sobre Ajuste de Avaliação Patrimonial",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Outros Resultados Abrangentes",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Ajustes Acumulados de Conversão",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Outros Resultados Abrangentes",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Participação dos Não Controladores",
-    "grupo": "PATRIMÔNIO LÍQUIDO",
-    "subgrupo": "Participação dos Não Controladores",
-    "natureza": "Credora",
-    "resposta": "PL"
-  },
-  {
-    "conta": "Faturamento Bruto de Produtos",
-    "grupo": "RESULTADO",
-    "subgrupo": "Faturamento de Produtos",
-    "natureza": "Credora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "(-) IPI sobre Produtos",
-    "grupo": "RESULTADO",
-    "subgrupo": "Faturamento de Produtos",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Receita de Vendas",
-    "grupo": "RESULTADO",
-    "subgrupo": "Receita Bruta",
-    "natureza": "Credora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Receita de Serviços",
-    "grupo": "RESULTADO",
-    "subgrupo": "Receita Bruta",
-    "natureza": "Credora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "PIS sobre Faturamento",
-    "grupo": "RESULTADO",
-    "subgrupo": "Tributos sobre Vendas",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "COFINS sobre Faturamento",
-    "grupo": "RESULTADO",
-    "subgrupo": "Tributos sobre Vendas",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "ICMS sobre Vendas",
-    "grupo": "RESULTADO",
-    "subgrupo": "Tributos sobre Vendas",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "ISS sobre Serviços",
-    "grupo": "RESULTADO",
-    "subgrupo": "Tributos sobre Vendas",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Abatimentos sobre Vendas",
-    "grupo": "RESULTADO",
-    "subgrupo": "↩ Ajustes da Receita",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Descontos Incondicionais",
-    "grupo": "RESULTADO",
-    "subgrupo": "↩ Ajustes da Receita",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Vendas Canceladas",
-    "grupo": "RESULTADO",
-    "subgrupo": "↩ Ajustes da Receita",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Devoluções Prováveis",
-    "grupo": "RESULTADO",
-    "subgrupo": "↩ Ajustes da Receita",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Provisão para Garantia",
-    "grupo": "RESULTADO",
-    "subgrupo": "↩ Ajustes da Receita",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  },
-  {
-    "conta": "Garantias Pós-Entrega",
-    "grupo": "RESULTADO",
-    "subgrupo": "↩ Ajustes da Receita",
-    "natureza": "Devedora",
-    "resposta": "RESULTADO"
-  }
+const contas = [
+ {n:'Caixa',g:'Ativo',c:'Ativo Circulante',s:'Caixa e Equivalentes de Caixa',nat:'Devedora',d:'Disponibilidade imediata da entidade.'},
+ {n:'Fundo Fixo',g:'Ativo',c:'Ativo Circulante',s:'Caixa e Equivalentes de Caixa',nat:'Devedora',d:'Valor disponível para pequenos pagamentos.'},
+ {n:'Bancos Conta Movimento',g:'Ativo',c:'Ativo Circulante',s:'Caixa e Equivalentes de Caixa',nat:'Devedora',d:'Saldo bancário de livre movimentação.'},
+ {n:'Aplicações de Liquidez Imediata',g:'Ativo',c:'Ativo Circulante',s:'Caixa e Equivalentes de Caixa',nat:'Devedora',d:'Aplicações resgatáveis imediatamente.'},
+ {n:'Aplicações disponíveis para venda',g:'Ativo',c:'Ativo Circulante',s:'Aplicações Financeiras',nat:'Devedora',d:'Direito financeiro mantido pela entidade.'},
+ {n:'Aplicações mantidas até o vencimento',g:'Ativo',c:'Ativo Circulante',s:'Aplicações Financeiras',nat:'Devedora',d:'Aplicação financeira classificada no ativo.'},
+ {n:'Aplicações avaliadas ao valor justo por meio do resultado',g:'Ativo',c:'Ativo Circulante',s:'Aplicações Financeiras',nat:'Devedora',d:'Ativo financeiro mensurado pelo valor justo.'},
+ {n:'Aplicações avaliadas pelo custo',g:'Ativo',c:'Ativo Circulante',s:'Aplicações Financeiras',nat:'Devedora',d:'Ativo financeiro registrado pelo custo.'},
+ {n:'(-) Perda estimada para redução ao valor recuperável',g:'Ativo',c:'Ativo Circulante',s:'Aplicações Financeiras',nat:'Credora',d:'Conta redutora do ativo.'},
+ {n:'Duplicatas a Receber',g:'Ativo',c:'Ativo Circulante',s:'Clientes',nat:'Devedora',d:'Direito a receber de clientes.'},
+ {n:'(-) Perdas Estimadas com Créditos de Liquidação Duvidosa',g:'Ativo',c:'Ativo Circulante',s:'Clientes',nat:'Credora',d:'Conta redutora de clientes.'},
+ {n:'(-) Juros a Apropriar',g:'Ativo',c:'Ativo Circulante',s:'Clientes',nat:'Credora',d:'Conta redutora do direito a receber.'},
+ {n:'Adiantamento de Salários',g:'Ativo',c:'Ativo Circulante',s:'Créditos com Empregados',nat:'Devedora',d:'Valor adiantado que será compensado futuramente.'},
+ {n:'Adiantamento de Férias',g:'Ativo',c:'Ativo Circulante',s:'Créditos com Empregados',nat:'Devedora',d:'Crédito da entidade contra empregado.'},
+ {n:'Adiantamento de 13º Salário',g:'Ativo',c:'Ativo Circulante',s:'Créditos com Empregados',nat:'Devedora',d:'Crédito decorrente de adiantamento ao empregado.'},
+ {n:'Adiantamento a Empregados',g:'Ativo',c:'Ativo Circulante',s:'Créditos com Empregados',nat:'Devedora',d:'Crédito a receber ou compensar.'},
+ {n:'Empréstimos a Empregados',g:'Ativo',c:'Ativo Circulante',s:'Créditos com Empregados',nat:'Devedora',d:'Direito de receber do empregado.'},
+ {n:'Adiantamento a Terceiros',g:'Ativo',c:'Ativo Circulante',s:'Créditos com Terceiros',nat:'Devedora',d:'Crédito perante terceiros.'},
+ {n:'ICMS a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Tributo recuperável é direito da entidade.'},
+ {n:'IRRF a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Crédito tributário a recuperar.'},
+ {n:'PIS a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Tributo recuperável classificado no ativo.'},
+ {n:'COFINS a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Crédito tributário da entidade.'},
+ {n:'IRPJ a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Imposto recuperável é ativo.'},
+ {n:'CSLL a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Contribuição recuperável é direito.'},
+ {n:'IPI a Recuperar',g:'Ativo',c:'Ativo Circulante',s:'Créditos Fiscais e Tributários',nat:'Devedora',d:'Tributo recuperável classificado no ativo.'},
+ {n:'Mercadorias para Revenda',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Bem destinado à venda.'},
+ {n:'Matéria-Prima',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Item mantido para produção.'},
+ {n:'Insumos',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Materiais consumidos na produção.'},
+ {n:'Material de Embalagem',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Material estocado para uso/venda.'},
+ {n:'Produtos em Elaboração',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Produção ainda não concluída.'},
+ {n:'Produtos Acabados',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Produto pronto para venda.'},
+ {n:'Almoxarifado',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Materiais mantidos pela entidade.'},
+ {n:'Estoque em Poder de Terceiros',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Continua sendo ativo da entidade.'},
+ {n:'Adiantamento a Fornecedores',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Valor pago antecipadamente para aquisição futura.'},
+ {n:'Adiantamento de Importação',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Devedora',d:'Crédito ligado à compra/importação futura.'},
+ {n:'(-) Ajuste a Valor Presente',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Credora',d:'Conta redutora do ativo.'},
+ {n:'(-) Perdas Estimadas para Redução ao Valor Realizável Líquido',g:'Ativo',c:'Ativo Circulante',s:'Estoques',nat:'Credora',d:'Conta redutora de estoques.'},
+ {n:'Ativos Biológicos',g:'Ativo',c:'Ativo Circulante',s:'Ativos Biológicos',nat:'Devedora',d:'Animal ou planta vivos controlados pela entidade.'},
+ {n:'Prêmios de Seguros',g:'Ativo',c:'Ativo Circulante',s:'Despesas Pagas Antecipadamente',nat:'Devedora',d:'Despesa paga antes da competência.'},
+ {n:'Aluguel Pago Antecipadamente',g:'Ativo',c:'Ativo Circulante',s:'Despesas Pagas Antecipadamente',nat:'Devedora',d:'Benefício futuro já pago.'},
+ {n:'Assinaturas a Apropriar',g:'Ativo',c:'Ativo Circulante',s:'Despesas Pagas Antecipadamente',nat:'Devedora',d:'Valor pago que será apropriado como despesa depois.'},
+ {n:'Anuidades a Apropriar',g:'Ativo',c:'Ativo Circulante',s:'Despesas Pagas Antecipadamente',nat:'Devedora',d:'Despesa antecipada a apropriar.'},
+ {n:'Ativo Não Circulante Mantido para Venda',g:'Ativo',c:'Ativo Circulante',s:'Ativo Não Circulante Mantido para Venda',nat:'Devedora',d:'Mesmo sendo originário do não circulante, é apresentado separadamente no ativo circulante quando mantido para venda.'},
+ {n:'Duplicatas a Receber LP',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Contas a Receber LP',nat:'Devedora',d:'Direito realizável no longo prazo.'},
+ {n:'(-) Perdas Estimadas LP',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Contas a Receber LP',nat:'Credora',d:'Conta redutora de créditos de longo prazo.'},
+ {n:'(-) Juros a Apropriar LP',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Contas a Receber LP',nat:'Credora',d:'Conta redutora de direito a receber de longo prazo.'},
+ {n:'ICMS Diferido',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Créditos Tributários e Tributos Diferidos',nat:'Devedora',d:'Crédito tributário diferido.'},
+ {n:'IRPJ Diferido',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Créditos Tributários e Tributos Diferidos',nat:'Devedora',d:'Tributo diferido recuperável.'},
+ {n:'CSLL Diferida',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Créditos Tributários e Tributos Diferidos',nat:'Devedora',d:'Contribuição diferida recuperável.'},
+ {n:'Créditos com Empresas Coligadas',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Créditos com Partes Relacionadas',nat:'Devedora',d:'Direito perante parte relacionada.'},
+ {n:'Créditos com Empresas Controladas',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Créditos com Partes Relacionadas',nat:'Devedora',d:'Direito perante controlada.'},
+ {n:'Dividendos Propostos a Receber',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Créditos com Partes Relacionadas',nat:'Devedora',d:'Direito de receber dividendos.'},
+ {n:'Ativos Biológicos LP',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Ativos Biológicos LP',nat:'Devedora',d:'Ativo biológico de longo prazo.'},
+ {n:'Despesas Pagas Antecipadamente LP',g:'Ativo',c:'Ativo Não Circulante - Realizável a Longo Prazo',s:'Despesas Antecipadas LP',nat:'Devedora',d:'Benefício econômico futuro de longo prazo.'},
+ {n:'Participações em Controladas',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Societárias',nat:'Devedora',d:'Investimento societário permanente.'},
+ {n:'Participações em Coligadas',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Societárias',nat:'Devedora',d:'Investimento em coligada.'},
+ {n:'(-) Perdas Estimadas',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Societárias',nat:'Credora',d:'Conta redutora de investimento.'},
+ {n:'Mais-Valia',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Societárias',nat:'Devedora',d:'Componente do investimento.'},
+ {n:'Ágio',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Societárias',nat:'Devedora',d:'Goodwill ou ágio na aquisição de investimento.'},
+ {n:'Método do Custo',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Avaliadas',nat:'Devedora',d:'Forma de mensuração de participação avaliada no investimento.'},
+ {n:'Valor Justo',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Participações Avaliadas',nat:'Devedora',d:'Mensuração de investimento pelo valor justo.'},
+ {n:'Imóveis para Aluguel',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Propriedades para Investimento',nat:'Devedora',d:'Propriedade mantida para aluguel.'},
+ {n:'Arrendamento Operacional',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Propriedades para Investimento',nat:'Devedora',d:'Item vinculado a propriedade para investimento.'},
+ {n:'Imóveis para Valorização',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Propriedades para Investimento',nat:'Devedora',d:'Imóvel mantido para valorização de capital.'},
+ {n:'Imóveis para Definição Futura',g:'Ativo',c:'Ativo Não Circulante - Investimentos',s:'Propriedades para Investimento',nat:'Devedora',d:'Imóvel mantido sem definição de uso futuro.'},
+ {n:'Terrenos',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem tangível usado nas atividades.'},
+ {n:'Edificações',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem físico usado na operação.'},
+ {n:'Instalações',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem tangível operacional.'},
+ {n:'Computadores',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem corpóreo usado nas atividades.'},
+ {n:'Máquinas',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem usado na produção/operação.'},
+ {n:'Móveis',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem tangível de uso.'},
+ {n:'Veículos',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Bens em Operação',nat:'Devedora',d:'Bem tangível operacional.'},
+ {n:'Obras em Andamento',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Imobilizado em Andamento',nat:'Devedora',d:'Imobilizado ainda em construção.'},
+ {n:'Instalações em Andamento',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Imobilizado em Andamento',nat:'Devedora',d:'Bem em formação.'},
+ {n:'Equipamentos em Andamento',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Imobilizado em Andamento',nat:'Devedora',d:'Imobilizado ainda não disponível para uso.'},
+ {n:'Adiantamentos a Fornecedores',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Imobilizado em Andamento',nat:'Devedora',d:'Adiantamento relacionado à aquisição/construção do imobilizado.'},
+ {n:'(-) Depreciação Acumulada',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Contas Redutoras do Imobilizado',nat:'Credora',d:'Conta redutora do imobilizado.'},
+ {n:'(-) Exaustão Acumulada',g:'Ativo',c:'Ativo Não Circulante - Imobilizado',s:'Contas Redutoras do Imobilizado',nat:'Credora',d:'Conta redutora do ativo exaurível.'},
+ {n:'(-) Perdas Estimadas para Redução ao Valor Recuperável',g:'Ativo',c:'Ativo Não Circulante - Imobilizado/Intangível',s:'Contas Redutoras',nat:'Credora',d:'Redutora do ativo por impairment.'},
+ {n:'Patentes',g:'Ativo',c:'Ativo Não Circulante - Intangível',s:'Intangível',nat:'Devedora',d:'Ativo sem substância física.'},
+ {n:'Direitos Autorais',g:'Ativo',c:'Ativo Não Circulante - Intangível',s:'Intangível',nat:'Devedora',d:'Direito incorpóreo controlado pela entidade.'},
+ {n:'Software',g:'Ativo',c:'Ativo Não Circulante - Intangível',s:'Intangível',nat:'Devedora',d:'Ativo não físico.'},
+ {n:'Intangível em Desenvolvimento',g:'Ativo',c:'Ativo Não Circulante - Intangível',s:'Intangível',nat:'Devedora',d:'Ativo intangível ainda em desenvolvimento.'},
+ {n:'(-) Amortização Acumulada',g:'Ativo',c:'Ativo Não Circulante - Intangível',s:'Intangível',nat:'Credora',d:'Conta redutora do intangível.'},
+ {n:'Fornecedores Nacionais',g:'Passivo',c:'Passivo Circulante',s:'Fornecedores',nat:'Credora',d:'Obrigação com fornecedor nacional.'},
+ {n:'Fornecedores Estrangeiros',g:'Passivo',c:'Passivo Circulante',s:'Fornecedores',nat:'Credora',d:'Obrigação com fornecedor estrangeiro.'},
+ {n:'Salários a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação trabalhista.'},
+ {n:'Rescisões a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação decorrente de rescisão.'},
+ {n:'Pró-Labore a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação com sócio/administrador.'},
+ {n:'Pensão Alimentícia a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação retida a repassar.'},
+ {n:'Férias a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação trabalhista.'},
+ {n:'13º Salário a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação trabalhista.'},
+ {n:'INSS a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação de recolhimento.'},
+ {n:'FGTS a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Encargo social a recolher.'},
+ {n:'Contribuição Sindical',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação a recolher.'},
+ {n:'Contribuição Assistencial',g:'Passivo',c:'Passivo Circulante',s:'Salários e Encargos Sociais',nat:'Credora',d:'Obrigação a recolher.'},
+ {n:'ICMS a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Tributo a pagar ao fisco.'},
+ {n:'ICMS ST a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Obrigação fiscal.'},
+ {n:'COFINS a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Contribuição a recolher.'},
+ {n:'PIS a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Contribuição a recolher.'},
+ {n:'ISS a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Imposto a pagar.'},
+ {n:'ISS Retido a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Valor retido a repassar.'},
+ {n:'IRRF a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Imposto retido a recolher.'},
+ {n:'IPI a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Imposto a pagar.'},
+ {n:'IRPJ a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Imposto de renda a pagar.'},
+ {n:'CSLL a Recolher',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Contribuição social a pagar.'},
+ {n:'Parcelamento de Tributos CP',g:'Passivo',c:'Passivo Circulante',s:'Obrigações Fiscais',nat:'Credora',d:'Obrigação fiscal de curto prazo.'},
+ {n:'Empréstimos Bancários CP',g:'Passivo',c:'Passivo Circulante',s:'Empréstimos e Financiamentos',nat:'Credora',d:'Obrigação financeira de curto prazo.'},
+ {n:'Financiamentos CP',g:'Passivo',c:'Passivo Circulante',s:'Empréstimos e Financiamentos',nat:'Credora',d:'Dívida de curto prazo.'},
+ {n:'Duplicatas Descontadas',g:'Passivo',c:'Passivo Circulante',s:'Empréstimos e Financiamentos',nat:'Credora',d:'Obrigação financeira decorrente de desconto de duplicatas.'},
+ {n:'(-) Encargos Financeiros a Transcorrer',g:'Passivo',c:'Passivo Circulante',s:'Empréstimos e Financiamentos/Debêntures',nat:'Devedora',d:'Conta redutora do passivo.'},
+ {n:'(-) Custos de Transação a Apropriar',g:'Passivo',c:'Passivo Circulante',s:'Empréstimos e Financiamentos/Debêntures',nat:'Devedora',d:'Redutora do passivo financeiro.'},
+ {n:'Debêntures CP',g:'Passivo',c:'Passivo Circulante',s:'Debêntures',nat:'Credora',d:'Dívida representada por debêntures de curto prazo.'},
+ {n:'Prêmio na Emissão de Debêntures',g:'Passivo',c:'Passivo Circulante/Não Circulante',s:'Debêntures',nat:'Credora',d:'Conta vinculada à obrigação por debêntures.'},
+ {n:'Água a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Contas a Pagar',nat:'Credora',d:'Obrigação com conta de consumo.'},
+ {n:'Luz a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Contas a Pagar',nat:'Credora',d:'Obrigação com energia.'},
+ {n:'Telefonia a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Contas a Pagar',nat:'Credora',d:'Obrigação com serviço.'},
+ {n:'Internet a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Contas a Pagar',nat:'Credora',d:'Obrigação com serviço.'},
+ {n:'Comissões a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Contas a Pagar',nat:'Credora',d:'Obrigação com comissões.'},
+ {n:'Adiantamento de Clientes',g:'Passivo',c:'Passivo Circulante',s:'Outras Obrigações',nat:'Credora',d:'A empresa recebeu antes de entregar o bem/serviço; portanto, tem obrigação.'},
+ {n:'Juros sobre Capital Próprio a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Outras Obrigações',nat:'Credora',d:'Obrigação com titulares/sócios.'},
+ {n:'Dividendos a Pagar',g:'Passivo',c:'Passivo Circulante',s:'Outras Obrigações',nat:'Credora',d:'Obrigação de pagar dividendos.'},
+ {n:'Provisões Fiscais',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação provável de natureza fiscal.'},
+ {n:'Provisões Previdenciárias',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação provável previdenciária.'},
+ {n:'Provisões Trabalhistas',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação provável trabalhista.'},
+ {n:'Provisões Cíveis',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação provável cível.'},
+ {n:'Provisões para Benefícios a Empregados',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação estimada com empregados.'},
+ {n:'Provisões para Garantias',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação provável por garantias.'},
+ {n:'Provisões para Reestruturação',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação estimada por reestruturação.'},
+ {n:'Provisões para Retirada de Ativos',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação de desmontagem/retirada.'},
+ {n:'Provisões para Programas de Fidelidade',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação estimada com benefícios futuros.'},
+ {n:'Provisões para Contratos Onerosos',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Credora',d:'Obrigação presente por contrato oneroso.'},
+ {n:'(-) Encargos a Apropriar',g:'Passivo',c:'Passivo Circulante',s:'Provisões',nat:'Devedora',d:'Conta redutora do passivo.'},
+ {n:'Empréstimos Bancários LP',g:'Passivo',c:'Passivo Não Circulante',s:'Empréstimos e Financiamentos LP',nat:'Credora',d:'Obrigação financeira de longo prazo.'},
+ {n:'Financiamentos LP',g:'Passivo',c:'Passivo Não Circulante',s:'Empréstimos e Financiamentos LP',nat:'Credora',d:'Dívida de longo prazo.'},
+ {n:'Parcelamentos LP',g:'Passivo',c:'Passivo Não Circulante',s:'Empréstimos e Financiamentos LP',nat:'Credora',d:'Obrigação parcelada de longo prazo.'},
+ {n:'Debêntures LP',g:'Passivo',c:'Passivo Não Circulante',s:'Debêntures LP',nat:'Credora',d:'Dívida por debêntures de longo prazo.'},
+ {n:'Provisões Trabalhistas LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Provisão trabalhista de longo prazo.'},
+ {n:'Provisões Previdenciárias LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Provisão previdenciária de longo prazo.'},
+ {n:'Provisões Fiscais LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Provisão fiscal de longo prazo.'},
+ {n:'Provisões Cíveis LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Provisão cível de longo prazo.'},
+ {n:'Provisões para Garantias LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Provisão para garantia de longo prazo.'},
+ {n:'Provisões para Reestruturação LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Obrigação estimada de longo prazo.'},
+ {n:'Provisões para Retirada de Ativos LP',g:'Passivo',c:'Passivo Não Circulante',s:'Provisões LP',nat:'Credora',d:'Obrigação de retirada/desmontagem no longo prazo.'},
+ {n:'IRPJ Diferido',g:'Passivo',c:'Passivo Não Circulante',s:'Tributos Diferidos',nat:'Credora',d:'Tributo diferido a pagar.'},
+ {n:'CSLL Diferida',g:'Passivo',c:'Passivo Não Circulante',s:'Tributos Diferidos',nat:'Credora',d:'Contribuição diferida a pagar.'},
+ {n:'Capital Subscrito',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Capital Social',nat:'Credora',d:'Capital comprometido pelos sócios.'},
+ {n:'(-) Capital a Integralizar',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Capital Social',nat:'Devedora',d:'Conta redutora do capital social.'},
+ {n:'Ágio na Emissão de Ações',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Capital',nat:'Credora',d:'Reserva de capital.'},
+ {n:'Reserva Especial para Ágio na Incorporação',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Capital',nat:'Credora',d:'Reserva de capital.'},
+ {n:'(-) Gastos na Emissão de Títulos Patrimoniais',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Capital',nat:'Devedora',d:'Conta redutora do patrimônio líquido.'},
+ {n:'Reserva Legal',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Reserva de lucro prevista na Lei das S.A.'},
+ {n:'Reserva Estatutária',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Reserva prevista no estatuto.'},
+ {n:'Reserva para Contingências',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Reserva de lucro.'},
+ {n:'Reserva de Lucros a Realizar',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Reserva de lucro.'},
+ {n:'Reserva para Expansão',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Retenção de lucros para expansão.'},
+ {n:'Reserva de Incentivos Fiscais',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Reserva de lucro ligada a incentivos fiscais.'},
+ {n:'Reserva Especial para Dividendo Obrigatório Não Distribuído',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Reservas de Lucro',nat:'Credora',d:'Reserva de lucros.'},
+ {n:'Lucros Acumulados',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Lucros ou Prejuízos Acumulados',nat:'Credora',d:'Resultado positivo acumulado.'},
+ {n:'Prejuízos Acumulados',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Lucros ou Prejuízos Acumulados',nat:'Devedora',d:'Conta de saldo devedor no PL.'},
+ {n:'Ajustes de Exercícios Anteriores',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Lucros ou Prejuízos Acumulados',nat:'Depende do ajuste',d:'Ajuste diretamente no PL, podendo aumentar ou reduzir.'},
+ {n:'Dividendo Adicional Proposto',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Dividendos',nat:'Credora',d:'Valor proposto adicionalmente, dentro do PL conforme a lista.'},
+ {n:'(-) Ações de Emissão Própria em Tesouraria',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Ações em Tesouraria',nat:'Devedora',d:'Conta redutora do patrimônio líquido.'},
+ {n:'Ajustes de Avaliação Patrimonial',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Outros Resultados Abrangentes',nat:'Credora/Devedora',d:'Componente do PL; saldo depende do ajuste.'},
+ {n:'(-) Tributos sobre Ajuste de Avaliação Patrimonial',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Outros Resultados Abrangentes',nat:'Devedora',d:'Conta redutora do ajuste no PL.'},
+ {n:'Ajustes Acumulados de Conversão',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Outros Resultados Abrangentes',nat:'Credora/Devedora',d:'Componente de outros resultados abrangentes.'},
+ {n:'Participação dos Não Controladores',g:'Patrimônio Líquido',c:'Patrimônio Líquido',s:'Participação dos Não Controladores',nat:'Credora',d:'Parcela do PL atribuída aos não controladores.'},
+ {n:'Faturamento Bruto de Produtos',g:'Receita/Dedução',c:'Resultado',s:'Faturamento de Produtos',nat:'Credora',d:'Receita/faturamento bruto.'},
+ {n:'(-) IPI sobre Produtos',g:'Receita/Dedução',c:'Resultado',s:'Faturamento de Produtos',nat:'Devedora',d:'Dedução do faturamento.'},
+ {n:'Receita de Vendas',g:'Receita/Dedução',c:'Resultado',s:'Receita Bruta',nat:'Credora',d:'Receita operacional.'},
+ {n:'Receita de Serviços',g:'Receita/Dedução',c:'Resultado',s:'Receita Bruta',nat:'Credora',d:'Receita pela prestação de serviços.'},
+ {n:'PIS sobre Faturamento',g:'Receita/Dedução',c:'Resultado',s:'Tributos sobre Vendas',nat:'Devedora',d:'Dedução/tributo sobre receita.'},
+ {n:'COFINS sobre Faturamento',g:'Receita/Dedução',c:'Resultado',s:'Tributos sobre Vendas',nat:'Devedora',d:'Dedução/tributo sobre receita.'},
+ {n:'ICMS sobre Vendas',g:'Receita/Dedução',c:'Resultado',s:'Tributos sobre Vendas',nat:'Devedora',d:'Dedução da receita de vendas.'},
+ {n:'ISS sobre Serviços',g:'Receita/Dedução',c:'Resultado',s:'Tributos sobre Vendas',nat:'Devedora',d:'Dedução da receita de serviços.'},
+ {n:'Abatimentos sobre Vendas',g:'Receita/Dedução',c:'Resultado',s:'Ajustes da Receita',nat:'Devedora',d:'Redução da receita.'},
+ {n:'Descontos Incondicionais',g:'Receita/Dedução',c:'Resultado',s:'Ajustes da Receita',nat:'Devedora',d:'Dedução da receita.'},
+ {n:'Vendas Canceladas',g:'Receita/Dedução',c:'Resultado',s:'Ajustes da Receita',nat:'Devedora',d:'Redução da receita bruta.'},
+ {n:'Devoluções Prováveis',g:'Receita/Dedução',c:'Resultado',s:'Ajustes da Receita',nat:'Devedora',d:'Ajuste redutor da receita.'},
+ {n:'Provisão para Garantia',g:'Receita/Dedução',c:'Resultado',s:'Ajustes da Receita',nat:'Devedora/Credora',d:'Conta ligada a garantias pós-venda conforme a lista de resultado.'},
+ {n:'Garantias Pós-Entrega',g:'Receita/Dedução',c:'Resultado',s:'Ajustes da Receita',nat:'Devedora',d:'Ajuste/encargo relacionado a garantias após entrega.'}
 ];
-let deck=[], index=0, right=0, wrong=0, timeLeft=60, timer=null, locked=false, history=[], lastDuration=60;
-document.getElementById('totalContas').textContent = ACCOUNTS.length;
-function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; }
-function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); clearInterval(timer); }
-function startGame(duration){ lastDuration=duration; deck=shuffle([...ACCOUNTS]); index=0; right=0; wrong=0; history=[]; timeLeft=duration; locked=false; show('game'); updateStats(); loadCard(); clearInterval(timer); if(duration<9999) timer=setInterval(()=>{timeLeft--; updateStats(); if(timeLeft<=0) finishGame();},1000); else document.getElementById('time').textContent='∞'; }
-function iconFor(a){ if(a.resposta==='ATIVO') return '🔵'; if(a.resposta==='PASSIVO') return '🔴'; if(a.resposta==='PL') return '🟢'; return '🟣'; }
-function loadCard(){ locked=false; document.getElementById('feedback').className='feedback'; document.getElementById('feedback').innerHTML=''; if(index>=deck.length) return finishGame(); const a=deck[index]; document.getElementById('emoji').textContent=iconFor(a); document.getElementById('account').textContent=a.conta; updateStats(); }
-function updateStats(){ document.getElementById('right').textContent=right; document.getElementById('wrong').textContent=wrong; if(lastDuration<9999) document.getElementById('time').textContent=timeLeft; const pct=Math.round((index/deck.length)*100); document.getElementById('bar').style.width=pct+'%'; }
-function answer(resp){ if(locked) return; locked=true; const a=deck[index]; const ok=resp===a.resposta; if(ok) right++; else wrong++; history.push(ok); const fb=document.getElementById('feedback'); fb.className='feedback '+(ok?'ok':'no'); fb.innerHTML=(ok?'✅ CORRETO!':'❌ ERROU!')+`<div class="detail">${a.conta} → ${a.grupo}<br>Subgrupo: ${a.subgrupo || '—'}<br>Natureza: ${a.natureza}</div>`; updateStats(); setTimeout(()=>{index++; loadCard();}, ok?650:1200); }
-function skip(){ if(locked) return; history.push(false); wrong++; index++; loadCard(); }
-function finishGame(){ clearInterval(timer); const total=right+wrong; const pct=total?Math.round((right/total)*100):0; document.getElementById('percent').textContent=pct+'%'; document.getElementById('summary').innerHTML=`Você respondeu <b>${total}</b> contas.<br>Acertos: <b>${right}</b> • Erros: <b>${wrong}</b>`; const grid=document.getElementById('grid'); grid.innerHTML=''; history.forEach((h,i)=>{const d=document.createElement('div'); d.className='dot '+(h?'ok':'no'); d.textContent=i+1; grid.appendChild(d);}); show('end'); }
+let filtro='Todos',deck=[],idx=0,acertos=0,erros=0,startTime=0,timer=null,limit=120,fbTimer=null,fbLeft=10;
+function $(id){return document.getElementById(id)}
+function setFiltro(f){filtro=f;$('filtroAtual').textContent=f==='Todos'?'Misturado':f}
+function shuffle(a){return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(x=>x[1])}
+function startGame(){let base=filtro==='Todos'?contas:contas.filter(x=>x.g===filtro); let q=+$('qtd').value; deck=shuffle(base).slice(0,q===999?base.length:Math.min(q,base.length)); idx=0;acertos=0;erros=0;limit=+$('tempoLimite').value;startTime=Date.now();$('menu').classList.add('hidden');$('result').classList.add('hidden');$('game').classList.remove('hidden');updateStats();showQ();timer=setInterval(tick,1000)}
+function tick(){updateStats(); if(limit>0 && Math.floor((Date.now()-startTime)/1000)>=limit){finish()}}
+function fmt(s){let m=Math.floor(s/60),r=s%60;return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0')}
+function updateStats(){let total=acertos+erros; $('stAcertos').textContent=acertos;$('stErros').textContent=erros;$('stAproveitamento').textContent=total?Math.round(acertos/total*100)+'%':'0%';$('stTempo').textContent=fmt(Math.floor((Date.now()-startTime)/1000));}
+function showQ(){if(idx>=deck.length)return finish();let q=deck[idx];$('contador').textContent=`Conta ${idx+1}/${deck.length}`;$('conta').textContent=q.n;$('subgrupo').textContent='Toque no grupo correto';$('fill').style.width=(idx/deck.length*100)+'%'}
+function answer(ans){let q=deck[idx], ok=ans===q.g; if(ok) acertos++; else erros++; updateStats(); $('game').classList.add('hidden'); $('fb').classList.remove('hidden'); let box=$('fbBox'); box.className='feedback '+(ok?'fb-ok':'fb-err'); $('fbTitle').textContent=ok?'✅ CORRETO!':'❌ ERRADO!'; $('fbConta').textContent=q.n; $('fbTexto').innerHTML=`<b>Você marcou:</b> ${ans}<br><b>Resposta correta:</b> ${q.g}<br><b>Classificação:</b> ${q.c}<br><b>Subgrupo:</b> ${q.s}<br><b>Natureza:</b> ${q.nat}<br><b>Dica:</b> ${q.d}`; startFeedbackCountdown();}
+function startFeedbackCountdown(){clearInterval(fbTimer);fbLeft=10;$('fbCountdown').textContent='Próxima conta em: '+fbLeft+' segundos';fbTimer=setInterval(()=>{fbLeft--; $('fbCountdown').textContent='Próxima conta em: '+fbLeft+' segundos'; if(fbLeft<=0) nextQuestion();},1000)}
+function nextQuestion(){clearInterval(fbTimer);idx++;$('fb').classList.add('hidden');$('game').classList.remove('hidden');showQ();}
+function finish(){clearInterval(timer);clearInterval(fbTimer);$('game').classList.add('hidden');$('fb').classList.add('hidden');$('result').classList.remove('hidden');let total=acertos+erros,p=total?Math.round(acertos/total*100):0;$('score').textContent=p+'%';let r=p>=90?'🏆 MESTRE DAS CONTAS':p>=80?'🥇 APROVADO NO CFC':p>=70?'🥈 BOM DE CONTABILIDADE':'📚 REVISAR CONTAS';$('rank').textContent=r;$('resumo').innerHTML=`Acertos: <b>${acertos}</b> • Erros: <b>${erros}</b> • Total respondido: <b>${total}</b><br>Tempo: <b>${$('stTempo').textContent}</b>`;$('fill').style.width='100%'}
+function resetAll(){clearInterval(timer);clearInterval(fbTimer);$('result').classList.add('hidden');$('fb').classList.add('hidden');$('game').classList.add('hidden');$('menu').classList.remove('hidden');acertos=erros=0;startTime=Date.now();updateStats()}
+function sendWhats(){let msg=`Resultado - Jogo da Velocidade Contas Contábeis%0AAcertos: ${acertos}%0AErros: ${erros}%0AAproveitamento: ${$('score').textContent}%0ATempo: ${$('stTempo').textContent}`; window.open('https://wa.me/5561985323574?text='+msg,'_blank')}
 </script>
 </body>
 </html>
